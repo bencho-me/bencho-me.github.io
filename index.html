@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ben Cho — Mechanical Engineering</title>
+<meta name="description" content="Minsuh (Ben) Cho — mechanical engineering and applied mathematics student at Johns Hopkins University, focused on robotics. Projects, writing, and contact.">
+<meta property="og:title" content="Ben Cho — Mechanical Engineering">
+<meta property="og:description" content="Robotics hardware, research, and engineering notes from a Johns Hopkins ME + AMS student.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout concept: an engineering drawing sheet. A ruled frame, a title block in place of a hero,
+   drawing numbers on every project, and an off-center grid that leans left like a drafted sheet. */
+:root{
+  --paper:#F1F2EF;      /* cool drafting paper */
+  --paper-2:#E6E8E4;    /* recessed panels, figure wells */
+  --ink:#16191D;        /* graphite */
+  --ink-2:#555C64;      /* secondary text */
+  --rule:#C5CAC7;       /* drawing lines */
+  --layout:#2443A8;     /* machinist's layout-fluid blue, the single accent */
+  --layout-soft:rgba(36,67,168,.09);
+
+  --f-display:"Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --s-1:.75rem; --s-2:.875rem; --s-3:1.0625rem; --s-4:1.375rem; --s-5:2rem; --s-6:clamp(2.6rem,6.5vw,5.2rem);
+  --max:1180px;
+  --gutter:max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r:max(16px, env(safe-area-inset-right, 0px));
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111417; --paper-2:#191D21; --ink:#E5E7E4; --ink-2:#9CA3A9; --rule:#2D3339;
+    --layout:#8AA0F2; --layout-soft:rgba(138,160,242,.12); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111417; --paper-2:#191D21; --ink:#E5E7E4; --ink-2:#9CA3A9; --rule:#2D3339;
+  --layout:#8AA0F2; --layout-soft:rgba(138,160,242,.12); color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:72px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important; animation:none!important} }
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--f-body); font-size:var(--s-3); line-height:1.6; -webkit-font-smoothing:antialiased}
+img{max-width:100%; display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--layout); outline-offset:3px}
+[hidden]{display:none!important}
+
+.wrap{max-width:var(--max); margin:0 auto; padding-left:var(--gutter); padding-right:var(--gutter-r)}
+.mono{font-family:var(--f-mono); font-size:var(--s-1); letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2)}
+
+/* ── Header ───────────────────────────── */
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:30; background:var(--paper)}
+.top{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:var(--paper); border-bottom:1px solid var(--rule)}
+.top .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:14px}
+.brand{font-family:var(--f-display); font-stretch:82%; font-weight:700; font-size:1.05rem; letter-spacing:.02em; text-decoration:none; text-transform:uppercase}
+.brand span{font-weight:400; color:var(--ink-2)}
+nav ul{list-style:none; margin:0; padding:0; display:flex; gap:clamp(14px,3vw,34px)}
+nav a{font-family:var(--f-mono); font-size:var(--s-1); letter-spacing:.12em; text-transform:uppercase; text-decoration:none; color:var(--ink-2); padding-block:6px; border-bottom:1px solid transparent}
+nav a:hover, nav a.on{color:var(--ink); border-bottom-color:var(--layout)}
+
+/* ── Title block (hero) ───────────────── */
+.sheet{padding-block:clamp(40px,8vw,88px) clamp(32px,6vw,64px)}
+.sheet-grid{display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); gap:clamp(28px,5vw,72px); align-items:end}
+.sheet h1{font-family:var(--f-display); font-stretch:68%; font-weight:780; font-size:var(--s-6); line-height:.92; letter-spacing:-.01em; margin:14px 0 22px; text-transform:uppercase; text-wrap:balance}
+.sheet h1 em{font-style:normal; color:var(--layout)}
+.sheet p.lede{max-width:56ch; margin:0; font-size:1.15rem; color:var(--ink)}
+.tblock{border:1.5px solid var(--ink); font-family:var(--f-mono); font-size:var(--s-1)}
+.tblock div{display:grid; grid-template-columns:7.5em minmax(0,1fr); border-top:1px solid var(--rule)}
+.tblock div:first-child{border-top:0}
+.tblock dt,.tblock dd{margin:0; padding:9px 12px}
+.tblock dt{color:var(--ink-2); letter-spacing:.08em; text-transform:uppercase; border-right:1px solid var(--rule)}
+.tblock dd{color:var(--ink)}
+.tblock .tb-head{background:var(--ink); color:var(--paper); display:flex; justify-content:space-between; padding:8px 12px; letter-spacing:.1em; text-transform:uppercase}
+.actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:28px}
+.btn{font-family:var(--f-mono); font-size:var(--s-1); letter-spacing:.1em; text-transform:uppercase; text-decoration:none; padding:11px 16px; border:1px solid var(--ink); background:transparent; color:var(--ink); cursor:pointer}
+.btn.solid{background:var(--ink); color:var(--paper)}
+.btn:hover{border-color:var(--layout); color:var(--layout)}
+.btn.solid:hover{background:var(--layout); color:var(--paper); border-color:var(--layout)}
+
+/* ── Section heads ────────────────────── */
+section.block{padding-block:clamp(48px,7vw,88px); border-top:1px solid var(--rule)}
+.shead{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:16px; align-items:end; margin-bottom:clamp(24px,4vw,44px)}
+.shead h2{font-family:var(--f-display); font-stretch:72%; font-weight:760; font-size:clamp(2rem,4.5vw,3.2rem); line-height:1; margin:6px 0 0; text-transform:uppercase}
+.shead p{margin:0; max-width:40ch; color:var(--ink-2); font-size:var(--s-2); text-align:right}
+
+/* ── Figure placeholder / image well ─── */
+.fig{position:relative; background:var(--paper-2); aspect-ratio:4/3; max-width:100%; overflow:hidden; border:1px solid var(--rule)}
+.fig img{width:100%; height:100%; object-fit:cover}
+.fig.empty{background-image:linear-gradient(var(--rule) 1px, transparent 1px), linear-gradient(90deg, var(--rule) 1px, transparent 1px); background-size:24px 24px; background-position:-1px -1px; background-color:var(--paper-2)}
+.fig.empty::before,.fig.empty::after{content:""; position:absolute; background:var(--layout); opacity:.55}
+.fig.empty::before{left:50%; top:calc(50% - 22px); width:1px; height:44px}
+.fig.empty::after{top:50%; left:calc(50% - 22px); height:1px; width:44px}
+.fig .tag{position:absolute; left:10px; bottom:10px; background:var(--paper); padding:4px 8px; border:1px solid var(--rule)}
+
+/* ── Featured projects (asymmetric) ──── */
+.featured{display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:clamp(16px,2.4vw,28px)}
+.card{grid-column:span 6; text-align:left; background:none; border:0; padding:0; color:inherit; font:inherit; cursor:pointer; display:flex; flex-direction:column; gap:12px}
+.featured .card:nth-child(1){grid-column:1 / 8; grid-row:span 2}
+.featured .card:nth-child(1) .fig{aspect-ratio:5/4}
+.featured .card:nth-child(2), .featured .card:nth-child(3){grid-column:8 / 13}
+.featured .card:nth-child(2) .fig, .featured .card:nth-child(3) .fig{aspect-ratio:16/9}
+.card .meta{display:flex; justify-content:space-between; gap:12px}
+.card h3{font-family:var(--f-display); font-stretch:80%; font-weight:700; font-size:var(--s-4); line-height:1.1; margin:0; text-transform:uppercase; text-wrap:balance}
+.card p{margin:0; color:var(--ink-2); font-size:var(--s-2); max-width:60ch}
+.card .fig{transition:border-color .2s}
+.card:hover .fig{border-color:var(--layout)}
+.card:hover h3{color:var(--layout)}
+
+/* ── Project index ───────────────────── */
+.index-head{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:14px; margin:clamp(44px,6vw,72px) 0 12px}
+.index-head h3{font-family:var(--f-mono); font-size:var(--s-1); font-weight:500; letter-spacing:.12em; text-transform:uppercase; margin:0}
+.filters{display:flex; flex-wrap:wrap; gap:6px}
+.chip{font-family:var(--f-mono); font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; padding:6px 10px; border:1px solid var(--rule); background:transparent; color:var(--ink-2); cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--ink); background:var(--ink); color:var(--paper)}
+.rows{list-style:none; margin:0; padding:0; border-top:1.5px solid var(--ink)}
+.row{border-bottom:1px solid var(--rule)}
+.row button{all:unset; box-sizing:border-box; cursor:pointer; width:100%; display:grid; grid-template-columns:6.5em minmax(0,2.2fr) minmax(0,1.4fr) 7em 1.5em; gap:16px; align-items:baseline; padding:16px 4px}
+.row button:focus-visible{outline:2px solid var(--layout); outline-offset:-2px}
+.row .t{font-family:var(--f-display); font-stretch:85%; font-weight:650; font-size:1.15rem; text-transform:uppercase; line-height:1.2}
+.row .c{color:var(--ink-2); font-size:var(--s-2)}
+.row .arrow{color:var(--layout); font-family:var(--f-mono); text-align:right}
+.row button:hover{background:var(--layout-soft)}
+.row button:hover .t{color:var(--layout)}
+.status{display:inline-block; margin-left:8px; font-family:var(--f-mono); font-size:.65rem; letter-spacing:.08em; vertical-align:middle; padding:2px 6px; border:1px solid var(--layout); color:var(--layout); text-transform:uppercase; font-weight:500}
+
+/* ── Blog ─────────────────────────────── */
+.blog-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2.4fr); gap:clamp(24px,5vw,64px)}
+.blog-aside p{margin:0 0 14px; color:var(--ink-2); font-size:var(--s-2); max-width:34ch}
+.posts{list-style:none; margin:0; padding:0}
+.post{border-top:1px solid var(--rule)}
+.post:last-child{border-bottom:1px solid var(--rule)}
+.post button{all:unset; box-sizing:border-box; cursor:pointer; display:grid; grid-template-columns:8.5em minmax(0,1fr); gap:18px; padding:22px 4px; width:100%}
+.post button:focus-visible{outline:2px solid var(--layout); outline-offset:-2px}
+.post h3{font-family:var(--f-body); font-weight:600; font-size:1.45rem; line-height:1.25; margin:0 0 6px; text-wrap:balance}
+.post p{margin:0; color:var(--ink-2); font-size:var(--s-2); max-width:62ch}
+.post button:hover h3{color:var(--layout)}
+.draft{display:inline-block; font-family:var(--f-mono); font-size:.65rem; letter-spacing:.08em; text-transform:uppercase; color:var(--paper); background:var(--ink-2); padding:2px 6px; margin-left:8px; vertical-align:middle}
+
+/* ── About ────────────────────────────── */
+.about-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.5fr); gap:clamp(28px,5vw,72px)}
+.portrait{aspect-ratio:4/5}
+.about-copy p{margin:0 0 16px; max-width:62ch}
+.timeline{list-style:none; margin:28px 0 0; padding:0; border-left:1.5px solid var(--ink)}
+.timeline li{position:relative; padding:0 0 22px 22px}
+.timeline li::before{content:""; position:absolute; left:-5px; top:.55em; width:8px; height:8px; background:var(--paper); border:1.5px solid var(--layout)}
+.timeline b{display:block; font-family:var(--f-display); font-stretch:85%; font-weight:650; text-transform:uppercase; font-size:1.02rem}
+.timeline span{font-size:var(--s-2); color:var(--ink-2)}
+.facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr)); gap:28px; margin-top:44px; padding-top:28px; border-top:1px solid var(--rule)}
+.facts h4{margin:0 0 10px; font-family:var(--f-mono); font-size:var(--s-1); font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+.facts ul{list-style:none; margin:0; padding:0; font-size:var(--s-2); display:grid; gap:4px}
+.contact{margin-top:44px; display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+.email{font-family:var(--f-mono); font-size:.95rem; border-bottom:1px solid var(--layout); text-decoration:none; user-select:all}
+
+footer{border-top:1.5px solid var(--ink); padding-block:22px 36px}
+footer .wrap{display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px}
+
+/* ── Reader dialog ───────────────────── */
+dialog{border:0; padding:0; width:min(860px, calc(100vw - 24px)); max-height:calc(100dvh - 24px); background:var(--paper); color:var(--ink); border:1.5px solid var(--ink); overflow:auto}
+dialog::backdrop{background:rgba(10,12,15,.55)}
+.dlg-bar{position:sticky; top:0; display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 16px; background:var(--ink); color:var(--paper); font-family:var(--f-mono); font-size:var(--s-1); letter-spacing:.1em; text-transform:uppercase}
+.dlg-bar button{all:unset; cursor:pointer; padding:4px 8px; border:1px solid currentColor}
+.dlg-bar button:focus-visible{outline:2px solid var(--layout); outline-offset:2px}
+.dlg-body{padding:clamp(20px,4vw,40px)}
+.dlg-body h2{font-family:var(--f-display); font-stretch:72%; font-weight:760; font-size:clamp(1.9rem,4.6vw,3rem); line-height:1; margin:8px 0 18px; text-transform:uppercase; text-wrap:balance}
+.dlg-body h2.serif{font-family:var(--f-body); font-stretch:100%; font-weight:600; text-transform:none; line-height:1.15}
+.dlg-body h3{font-family:var(--f-display); font-stretch:85%; text-transform:uppercase; font-size:1.1rem; margin:28px 0 8px}
+.dlg-body p, .dlg-body li{max-width:65ch}
+.dlg-body ul{padding-left:1.2em}
+.dlg-body li{margin-bottom:8px}
+.specs{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr)); border:1px solid var(--rule); margin:22px 0}
+.specs div{padding:10px 12px; border-right:1px solid var(--rule); border-bottom:1px solid var(--rule)}
+.specs dt{font-family:var(--f-mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2)}
+.specs dd{margin:2px 0 0; font-size:var(--s-2)}
+.tools{display:flex; flex-wrap:wrap; gap:6px; list-style:none; padding:0!important}
+.tools li{font-family:var(--f-mono); font-size:.72rem; padding:4px 8px; border:1px solid var(--rule); margin:0}
+.gallery{display:grid; gap:12px; margin-top:16px}
+
+/* ── Responsive ───────────────────────── */
+@media (max-width: 860px){
+  .sheet-grid,.blog-grid,.about-grid{grid-template-columns:minmax(0,1fr)}
+  .featured .card:nth-child(n){grid-column:1 / -1; grid-row:auto}
+  .row button{grid-template-columns:minmax(0,1fr) auto; gap:4px 12px}
+  .row .no{grid-column:1 / -1}
+  .row .c{grid-column:1}
+  .row .y{grid-column:2; grid-row:2; text-align:right}
+  .row .arrow{display:none}
+  .shead{grid-template-columns:minmax(0,1fr)}
+  .shead p{text-align:left}
+  .portrait{max-width:340px}
+}
+@media (max-width: 520px){
+  .brand span{display:none}
+  .post button{grid-template-columns:minmax(0,1fr); gap:6px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     ✏️  EDIT YOUR CONTENT HERE — this is the only part you need to touch.
+     - To ADD a project: copy one { ... }, block, paste it, change the text.
+     - To ADD a blog post: same thing in the POSTS list.
+     - Text goes between the ` backticks. Apostrophes are fine inside them.
+     - In blog posts, leave an empty line between paragraphs.
+       Start a line with "## " to make a subheading.
+     - Photos: upload the image into the "images" folder, then write its
+       name, e.g.  image: "images/gripper.jpg"   (leave "" for a placeholder)
+     - featured: true  shows the project as a big card (best with exactly 3).
+     - Set draft: false on a post once you have rewritten it in your words.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<script>
+const SITE = {
+  name: `Minsuh (Ben) Cho`,
+  email: `mcho36@jh.edu`,
+  linkedin: ``,            // paste your LinkedIn URL, e.g. https://www.linkedin.com/in/yourname
+  github: ``,              // optional
+  resume: `resume.pdf`,    // upload your resume PDF with this exact name
+  portrait: ``,            // e.g. images/ben.jpg
+};
+
+const PROJECTS = [
+  {
+    no: `BC-25-04`, title: `Parallel Robotic Gripper`, context: `JHU Mars Rover Team · Mechanical`,
+    date: `Mar – Aug 2025`, year: `2025`, category: `Robotics`, featured: true, status: ``,
+    image: ``, images: [],
+    summary: `A lead-screw parallel gripper with custom-machined parts that holds loads up to 5 kg.`,
+    details: [
+      `Designed in CAD and manufactured a parallel robotic gripper with custom-machined components.`,
+      `Used a self-locking lead screw so the jaws hold their grip without continuous motor torque, improving grip stability.`,
+      `Achieved a secure grasp of loads up to 5 kg.`,
+    ],
+    specs: [[`Payload`, `Up to 5 kg`], [`Drive`, `Self-locking lead screw`], [`Role`, `Design & manufacture`]],
+    tools: [`CAD`, `CNC machining`, `Lead screw mechanism`],
+  },
+  {
+    no: `BC-25-03`, title: `Laser Flyer Recast Optimization`, context: `Hopkins Extreme Materials Institute`,
+    date: `May – Aug 2025`, year: `2025`, category: `Research`, featured: true, status: ``,
+    image: ``, images: [],
+    summary: `A Gaussian Process Regression model that guided high-impact experiments and cut flyer recast height by 35%.`,
+    details: [
+      `Designed the experimental workflow and implemented a Gaussian Process Regression (GPR) optimization model for high-impact laser flyer experiments.`,
+      `Reduced laser flyer recast height by 35% and improved flyer integrity.`,
+      `Manufactured Al and Cu samples by EDM and polishing to produce controlled surface-roughness specimens.`,
+      `Designed a compression grid in CAD that eliminated sample bulging inside the holder assembly and improved alignment during laser shots.`,
+      `Presented results to 15+ members at a lab group meeting.`,
+    ],
+    specs: [[`Result`, `−35% recast height`], [`Method`, `GPR optimization`], [`Materials`, `Al, Cu`]],
+    tools: [`Python`, `GPR`, `EDM`, `Polishing`, `CAD`],
+  },
+  {
+    no: `BC-24-01`, title: `Glider Launcher Vehicle`, context: `JHU MechE Design I · Team lead`,
+    date: `Sep – Dec 2024`, year: `2024`, category: `Design`, featured: true, status: `2nd of 22`,
+    image: ``, images: [],
+    summary: `A vehicle that turns gravitational potential energy into elastic energy to launch a glider over a 4-ft wall 6 ft away.`,
+    details: [
+      `Led a three-person team to design a vehicle that converts gravitational potential energy into elastic potential energy.`,
+      `The vehicle launches a glider over an obstacle 4 ft tall and 6 ft away.`,
+      `Designed in SolidWorks and built with laser cutting and machining.`,
+      `Placed 2nd of 22 teams in the JHU MechE Design Competition.`,
+    ],
+    specs: [[`Target`, `4 ft tall, 6 ft away`], [`Team`, `3 (lead)`], [`Result`, `2nd of 22 teams`]],
+    tools: [`SolidWorks`, `Laser cutting`, `Machining`],
+  },
+  {
+    no: `BC-26-01`, title: `Multi-DOF Robot Arm`, context: `Independent build`,
+    date: `2026 –`, year: `2026`, category: `Robotics`, featured: false, status: `In progress`,
+    image: ``, images: [],
+    summary: `A self-designed robot arm with cycloidal reducers and closed-loop joint control.`,
+    details: [
+      `Designing a 5–7 DOF robot arm in Onshape, targeting a payload of at least 1 kg.`,
+      `Planned drivetrain: cycloidal reducers on BLDC or stepper motors with encoder feedback for closed-loop control.`,
+      `The focus is learning to build cycloidal drives and closed-loop control, more than chasing reach or payload numbers.`,
+    ],
+    specs: [[`DOF`, `5–7 (planned)`], [`Payload`, `≥ 1 kg target`], [`Reducer`, `Cycloidal`]],
+    tools: [`Onshape`, `3D printing`, `Cycloidal drive`, `Encoders`],
+  },
+  {
+    no: `BC-25-05`, title: `Sheath Auger Soil Drill`, context: `JHU Mars Rover Team · Mechanical`,
+    date: `Mar – Aug 2025`, year: `2025`, category: `Robotics`, featured: false, status: ``,
+    image: ``, images: [],
+    summary: `A sheathed auger that extracts soil from up to 10 cm deep and hands it to the rover's spectroscopy system.`,
+    details: [
+      `Engineered a sheath auger drill that extracts soil from depths up to 10 cm.`,
+      `Enabled reliable transfer of soil samples to the rover's spectroscopy analysis system.`,
+      `Led design reviews for rover subsystems, explaining design rationale from mission requirements through concept evaluation, motor selection, electronics, and prototyping.`,
+    ],
+    specs: [[`Depth`, `Up to 10 cm`], [`Interface`, `Spectroscopy system`]],
+    tools: [`CAD`, `Prototyping`, `Motor selection`],
+  },
+  {
+    no: `BC-25-02`, title: `Robotic Arm Launcher Arcade`, context: `JHU MechE Design II · Co-creator`,
+    date: `Jan – Apr 2025`, year: `2025`, category: `Design`, featured: false, status: ``,
+    image: ``, images: [],
+    summary: `An arcade basketball game with a joystick-controlled robotic arm launcher, beam-break scoring, and a score display.`,
+    details: [
+      `Developed an interactive arcade-style basketball game with a joystick-controlled robotic arm launcher, beam-break scoring, and a UI display, programmed in Arduino (C++).`,
+      `Led the SolidWorks design of the launcher arm, hoop structures, and sensor housing.`,
+      `Used 3D printing and laser cutting for rapid prototyping and assembly.`,
+    ],
+    specs: [[`Control`, `Joystick`], [`Scoring`, `Beam-break sensors`]],
+    tools: [`Arduino (C++)`, `SolidWorks`, `3D printing`, `Laser cutting`],
+  },
+  {
+    no: `BC-25-01`, title: `GPR Model for Dislocation Plasticity`, context: `ICE-4-iMD Lab, JHU`,
+    date: `Jan – May 2025`, year: `2025`, category: `Research`, featured: false, status: ``,
+    image: ``, images: [],
+    summary: `A Python Gaussian Process Regression model that predicts material strength from size-dependent plasticity data.`,
+    details: [
+      `Developed a GPR model in Python to predict material strength, optimizing kernel selection for modeling dislocation behavior in metals.`,
+      `Reviewed experimental datasets from the literature for research on size-dependent dislocation plasticity.`,
+    ],
+    specs: [[`Method`, `Gaussian Process Regression`], [`Domain`, `Dislocation plasticity`]],
+    tools: [`Python`, `GPR`, `Kernel selection`],
+  },
+  {
+    no: `BC-24-02`, title: `Posture & Demographics Study`, context: `High school capstone`,
+    date: `Sep 2023 – May 2024`, year: `2024`, category: `Software & Data`, featured: false, status: ``,
+    image: ``, images: [],
+    summary: `A correlation study of 40+ students linking six demographic categories to sitting posture.`,
+    details: [
+      `Ran a correlation analysis between high school students' demographic data (6 categories) and their postural behaviors.`,
+      `Coordinated observational study sessions and analyzed data from 40+ students.`,
+      `Used regression analysis, Pearson correlation, point-biserial correlation, and chi-square tests.`,
+    ],
+    specs: [[`Sample`, `40+ students`], [`Variables`, `6 demographic categories`]],
+    tools: [`Regression`, `Pearson's r`, `Chi-square`],
+  },
+  {
+    no: `BC-23-01`, title: `Posture Detection Web App`, context: `Independent project`,
+    date: `May – Nov 2023`, year: `2023`, category: `Software & Data`, featured: false, status: ``,
+    image: ``, images: [],
+    summary: `A web app that analyzes a computer user's sitting posture and recommends corrections and stretches.`,
+    details: [
+      `Built a web app around an open-source posture detection model to analyze the sitting posture of computer users.`,
+      `Added analytics of each user's poor-posture data with matched recommendations and stretch videos.`,
+      `Produced visual graphics so users could track their improvement over time.`,
+    ],
+    specs: [[`Type`, `Web application`], [`Model`, `Open-source pose detection`]],
+    tools: [`HTML`, `Pose estimation`, `Data visualization`],
+  },
+];
+
+const POSTS = [
+  {
+    title: `Why a self-locking lead screw for a rover gripper`,
+    date: `2025-09-02`, tag: `Design notes`, draft: true,
+    excerpt: `A gripper that holds its grip with the motor off, and the trade-off you accept to get it.`,
+    body: `STARTER DRAFT. Rewrite this in your own words, then set draft: false.
+
+On the rover gripper, the jaws are driven by a lead screw. The reason is simple: a rover arm spends a lot of time holding things, and a motor that has to keep pushing to hold a sample is wasting power and heat.
+
+## What "self-locking" means
+
+A lead screw is self-locking when the load on the jaws cannot spin the screw backwards. That happens when the thread's lead angle is small compared to the friction angle between the screw and nut. Push on the jaws and the friction wins, so the grip stays put with no motor torque.
+
+## The trade-off
+
+The same friction that locks the screw also lowers its efficiency, so the motor works harder when closing. For a gripper that holds far more often than it moves, that is a good trade.
+
+## What I would change next time
+
+Add a note here about what you learned in testing: jaw alignment, backlash, how you measured the 5 kg grip.`,
+  },
+  {
+    title: `Starting a robot arm build`,
+    date: `2026-10-01`, tag: `Build log`, draft: true,
+    excerpt: `Why I'm designing my own arm around cycloidal reducers and closed-loop control.`,
+    body: `STARTER DRAFT. Rewrite this in your own words, then set draft: false.
+
+I'm designing a multi-DOF robot arm from scratch. The goal is less about the final spec sheet and more about learning the hard parts myself: reduction, feedback, and control.
+
+## Why cycloidal drives
+
+Write about why you picked cycloidal reducers: compact, high ratio, low backlash, and they can be 3D printed for a first prototype.
+
+## What comes next
+
+Write about your next milestone: one joint on the bench with an encoder, closed-loop position control, and a few measurements.`,
+  },
+];
+</script>
+<!-- ═══════════════════ END OF EDITABLE CONTENT ═══════════════════ -->
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">Ben Cho <span>/ Mechanical Eng.</span></a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="sheet">
+    <div class="wrap sheet-grid">
+      <div>
+        <div class="mono">Johns Hopkins University · Mechanical Engineering + Applied Math</div>
+        <h1>Hardware for <em>robots</em>, from model to machined part</h1>
+        <p class="lede">I'm Ben, an undergraduate at Johns Hopkins focused on robotics. I design mechanisms in CAD, build them on the mill, lathe and EDM, and use statistical models to make experiments work better.</p>
+        <div class="actions">
+          <a class="btn solid" href="#portfolio">View projects</a>
+          <a class="btn" id="resumeBtn" href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
+        </div>
+      </div>
+      <dl class="tblock" aria-label="Summary">
+        <div class="tb-head"><span>Title block</span><span>Sheet 1 of 1</span></div>
+        <div><dt>Name</dt><dd>Minsuh (Ben) Cho</dd></div>
+        <div><dt>Degree</dt><dd>B.S. ME &amp; AMS · exp. May 2030</dd></div>
+        <div><dt>GPA</dt><dd>3.76 / 4.0 · Dean's List</dd></div>
+        <div><dt>Focus</dt><dd>Robotics, mechanisms</dd></div>
+        <div><dt>CAD</dt><dd>SolidWorks · Creo · Onshape</dd></div>
+        <div><dt>Code</dt><dd>Python · C++ (Arduino) · MATLAB</dd></div>
+        <div><dt>Shop</dt><dd>CNC · EDM · Lathe · 3D print · Laser</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="block" id="portfolio">
+    <div class="wrap">
+      <div class="shead">
+        <div><div class="mono">Section A</div><h2>Portfolio</h2></div>
+        <p>Research, competition, and team hardware. Select any project for the full write-up.</p>
+      </div>
+      <div class="featured" id="featured"></div>
+
+      <div class="index-head">
+        <h3>Project index</h3>
+        <div class="filters" id="filters" role="group" aria-label="Filter projects"></div>
+      </div>
+      <ul class="rows" id="rows"></ul>
+    </div>
+  </section>
+
+  <section class="block" id="blog">
+    <div class="wrap blog-grid">
+      <div class="blog-aside">
+        <div class="mono">Section B</div>
+        <div class="shead" style="margin-bottom:18px"><h2>Blog</h2></div>
+        <p>Build logs, design notes, and things I'm learning along the way. Less polished than the portfolio, on purpose.</p>
+      </div>
+      <ul class="posts" id="posts"></ul>
+    </div>
+  </section>
+
+  <section class="block" id="about">
+    <div class="wrap">
+      <div class="shead">
+        <div><div class="mono">Section C</div><h2>About me</h2></div>
+      </div>
+      <div class="about-grid">
+        <div class="fig portrait" id="portrait"></div>
+        <div class="about-copy">
+          <p>I study Mechanical Engineering and Applied Mathematics &amp; Statistics at Johns Hopkins University, and I'm most interested in robotics: the mechanisms, drivetrains, and control that let a machine do useful work in the physical world.</p>
+          <p>My work so far mixes hands-on hardware and data. On the JHU Mars Rover team I built a gripper and a soil drill. In two research labs I used Gaussian Process Regression to model material strength and to optimize laser flyer experiments. Right now I'm designing my own robot arm.</p>
+          <ul class="timeline">
+            <li><b>Research Assistant · Hopkins Extreme Materials Institute</b><span>May – Aug 2025 · GPR-guided experiments, EDM sample prep, fixture design</span></li>
+            <li><b>Mechanical Sub-Team · JHU Mars Rover</b><span>Mar – Aug 2025 · Gripper, auger drill, design reviews</span></li>
+            <li><b>Research Assistant · ICE-4-iMD Lab, JHU</b><span>Jan – May 2025 · GPR model for dislocation plasticity</span></li>
+            <li><b>Johns Hopkins University</b><span>Aug 2024 – · B.S. ME &amp; AMS, Dean's List Fall 2024 &amp; Spring 2025</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="facts">
+        <div><h4>Programming</h4><ul><li>Python</li><li>Arduino (C++)</li><li>MATLAB</li><li>HTML</li></ul></div>
+        <div><h4>CAD</h4><ul><li>SolidWorks</li><li>Creo</li><li>Onshape</li></ul></div>
+        <div><h4>Manufacturing</h4><ul><li>CNC machining (EDM, lathe)</li><li>3D printing</li><li>Laser cutting</li></ul></div>
+        <div><h4>Awards</h4><ul><li>Cum Laude Society, 2024</li><li>Col. D.F. Wills Economics Award, 2024</li><li>Bausch &amp; Lomb Honorary Science Award, 2023</li><li>AIME Qualifier, 2022</li></ul></div>
+      </div>
+
+      <div class="contact">
+        <span class="mono">Contact</span>
+        <a class="email" id="email" href="#"></a>
+        <button class="btn" id="copyBtn" type="button">Copy email</button>
+        <a class="btn" id="liBtn" href="#" target="_blank" rel="noopener" hidden>LinkedIn</a>
+        <a class="btn" id="ghBtn" href="#" target="_blank" rel="noopener" hidden>GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="mono" id="foot"></span>
+    <a class="mono" href="#top" style="text-decoration:none">Back to top ↑</a>
+  </div>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg-bar"><span id="dlgKicker"></span><button type="button" id="dlgClose">Close ✕</button></div>
+  <div class="dlg-body" id="dlgBody"></div>
+</dialog>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  function fig(src, label){
+    return src
+      ? `<div class="fig"><img src="${esc(src)}" alt="${esc(label)}" loading="lazy"></div>`
+      : `<div class="fig empty"><span class="tag mono">${esc(label)}</span></div>`;
+  }
+  const fmtDate = d => {
+    const t = new Date(d + 'T00:00:00');
+    return isNaN(t) ? esc(d) : t.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
+  };
+
+  /* Featured */
+  const feat = PROJECTS.filter(p => p.featured);
+  $('#featured').innerHTML = feat.map((p, i) => `
+    <button class="card" type="button" data-p="${PROJECTS.indexOf(p)}">
+      ${fig(p.image, 'Fig. ' + (i+1) + ' · ' + p.no)}
+      <div class="meta"><span class="mono">${esc(p.context)}</span><span class="mono">${esc(p.year)}</span></div>
+      <h3>${esc(p.title)}${p.status ? `<span class="status">${esc(p.status)}</span>` : ''}</h3>
+      <p>${esc(p.summary)}</p>
+    </button>`).join('');
+
+  /* Index + filters */
+  const cats = ['All', ...new Set(PROJECTS.map(p => p.category))];
+  let active = 'All';
+  function renderRows(){
+    const list = PROJECTS.filter(p => !p.featured && (active === 'All' || p.category === active));
+    const all = active === 'All' ? list : PROJECTS.filter(p => p.category === active);
+    $('#rows').innerHTML = all.map(p => `
+      <li class="row"><button type="button" data-p="${PROJECTS.indexOf(p)}">
+        <span class="no mono">${esc(p.no)}</span>
+        <span class="t">${esc(p.title)}${p.status ? `<span class="status">${esc(p.status)}</span>` : ''}</span>
+        <span class="c">${esc(p.context)}</span>
+        <span class="y mono">${esc(p.year)}</span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </button></li>`).join('') || `<li class="row" style="padding:16px 4px;color:var(--ink-2)">No projects in this category yet.</li>`;
+  }
+  $('#filters').innerHTML = cats.map(c => `<button class="chip" type="button" aria-pressed="${c==='All'}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
+  $('#filters').addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if(!b) return;
+    active = b.dataset.c;
+    document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x === b));
+    renderRows();
+  });
+  renderRows();
+
+  /* Posts */
+  const posts = [...POSTS].sort((a,b) => (b.date||'').localeCompare(a.date||''));
+  $('#posts').innerHTML = posts.length ? posts.map(p => `
+    <li class="post"><button type="button" data-b="${POSTS.indexOf(p)}">
+      <span class="mono">${fmtDate(p.date)}<br>${esc(p.tag)}</span>
+      <span><h3>${esc(p.title)}${p.draft ? '<span class="draft">Draft</span>' : ''}</h3><p>${esc(p.excerpt)}</p></span>
+    </button></li>`).join('') : `<li class="post" style="padding:22px 4px;color:var(--ink-2)">First post coming soon.</li>`;
+
+  /* Dialog */
+  const dlg = $('#dlg');
+  function openProject(p){
+    $('#dlgKicker').textContent = `${p.no} · ${p.category}`;
+    const imgs = [p.image, ...(p.images||[])].filter(Boolean);
+    $('#dlgBody').innerHTML = `
+      <div class="mono">${esc(p.context)} · ${esc(p.date)}</div>
+      <h2 id="dlgTitle">${esc(p.title)}</h2>
+      <p style="font-size:1.15rem">${esc(p.summary)}</p>
+      ${(p.specs||[]).length ? `<dl class="specs">${p.specs.map(s => `<div><dt>${esc(s[0])}</dt><dd>${esc(s[1])}</dd></div>`).join('')}</dl>` : ''}
+      <div class="gallery">${imgs.length ? imgs.map((s,i) => fig(s, p.title + ' figure ' + (i+1))).join('') : fig('', 'Fig. A · photo pending')}</div>
+      <h3>What I did</h3>
+      <ul>${(p.details||[]).map(d => `<li>${esc(d)}</li>`).join('')}</ul>
+      ${(p.tools||[]).length ? `<h3>Tools &amp; methods</h3><ul class="tools">${p.tools.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}`;
+    show();
+  }
+  function openPost(p){
+    $('#dlgKicker').textContent = `${p.tag} · ${fmtDate(p.date)}`;
+    const body = esc(p.body).split(/\n\s*\n/).map(b => b.startsWith('## ') ? `<h3>${b.slice(3)}</h3>` : `<p>${b.replace(/\n/g,'<br>')}</p>`).join('');
+    $('#dlgBody').innerHTML = `
+      ${p.draft ? '<span class="draft" style="margin:0">Draft</span>' : ''}
+      <h2 class="serif" id="dlgTitle">${esc(p.title)}</h2>
+      ${p.image ? fig(p.image, p.title) : ''}
+      ${body}`;
+    show();
+  }
+  function show(){ if(dlg.showModal){ dlg.showModal(); } else { dlg.setAttribute('open',''); } dlg.scrollTop = 0; }
+  $('#dlgClose').addEventListener('click', () => dlg.close ? dlg.close() : dlg.removeAttribute('open'));
+  dlg.addEventListener('click', e => { if(e.target === dlg) dlg.close(); });
+  document.addEventListener('click', e => {
+    const pb = e.target.closest('[data-p]'); if(pb) return openProject(PROJECTS[+pb.dataset.p]);
+    const bb = e.target.closest('[data-b]'); if(bb) return openPost(POSTS[+bb.dataset.b]);
+  });
+
+  /* About / contact */
+  $('#portrait').outerHTML = SITE.portrait
+    ? `<div class="fig portrait"><img src="${esc(SITE.portrait)}" alt="Portrait of ${esc(SITE.name)}"></div>`
+    : `<div class="fig portrait empty"><span class="tag mono">Portrait · add photo</span></div>`;
+  const em = $('#email'); em.textContent = SITE.email; em.href = 'mailto:' + SITE.email;
+  $('#copyBtn').addEventListener('click', async e => {
+    try { await navigator.clipboard.writeText(SITE.email); e.target.textContent = 'Copied'; }
+    catch(_) { const r = document.createRange(); r.selectNodeContents(em); const s = getSelection(); s.removeAllRanges(); s.addRange(r); e.target.textContent = 'Selected'; }
+    setTimeout(() => e.target.textContent = 'Copy email', 1600);
+  });
+  if (SITE.linkedin){ $('#liBtn').href = SITE.linkedin; $('#liBtn').hidden = false; }
+  if (SITE.github){ $('#ghBtn').href = SITE.github; $('#ghBtn').hidden = false; }
+  if (SITE.resume){ $('#resumeBtn').href = SITE.resume; } else { $('#resumeBtn').hidden = true; }
+  $('#foot').textContent = `© ${new Date().getFullYear()} ${SITE.name} · Baltimore, MD`;
+
+  /* Highlight current section in nav */
+  const links = [...document.querySelectorAll('nav a')];
+  const io = 'IntersectionObserver' in window && new IntersectionObserver(es => {
+    es.forEach(en => { if(en.isIntersecting){ links.forEach(l => l.classList.toggle('on', l.getAttribute('href') === '#' + en.target.id)); } });
+  }, {rootMargin:'-45% 0px -50% 0px'});
+  io && ['portfolio','blog','about'].forEach(id => io.observe(document.getElementById(id)));
+})();
+</script>
+</body>
+</html>
