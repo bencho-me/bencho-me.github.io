@@ -90,10 +90,15 @@ section.block{padding-block:clamp(20px,2.6vw,32px) clamp(48px,7vw,84px); border-
 .shead h2 .mono{font-stretch:100%; margin-right:12px; vertical-align:middle}
 
 /* ── Portfolio grid: 2 major on top, 3 per row below ── */
-.projects{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:clamp(30px,4vw,48px) var(--gap); align-items:start}
+.projects{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); row-gap:clamp(30px,4vw,48px); column-gap:calc(3.045% + 0.639 * var(--gap)); align-items:start}   /* card gap: 30% below the earlier 76 px (≈53 px on a laptop) */
+@media (max-width: 900px){ .projects{column-gap:var(--gap)} }
 .card{grid-column:span 2; display:flex; flex-direction:column; gap:10px; text-decoration:none; color:inherit; min-width:0}
 .card.major{grid-column:span 3}
-.card.major .fig{aspect-ratio:2/1}
+.card.major .fig{aspect-ratio:1.514}     /* ~536 x 354 px on a laptop */
+/* smaller cards: 5:4 frames (wider than tall), same picture area as the old 3:2 frames;
+   outer cards stay flush with the page edges */
+.card:not(.major) .fig{aspect-ratio:5/4}
+
 .card .meta{display:flex; justify-content:space-between; gap:10px}
 .card .meta span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .card h3{font-family:var(--f-display); font-stretch:80%; font-weight:700; font-size:1.15rem; line-height:1.12; margin:0; text-transform:uppercase; text-wrap:balance}
@@ -151,10 +156,9 @@ footer a{text-decoration:none}
 .specs dt{font-family:var(--f-mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2)}
 .specs dd{margin:3px 0 0; font-size:var(--s-2)}
 
-.hero-figs{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--gap); margin-bottom:clamp(28px,4vw,48px)}
-.hero-figs .fig{grid-column:span 1; aspect-ratio:3/2}
-.hero-figs .fig:first-child{grid-column:1 / -1; aspect-ratio:16/8}
-.hero-figs.two .fig:first-child{grid-column:span 1; aspect-ratio:3/2}
+.hero-figs{display:flex; gap:var(--gap); margin-bottom:clamp(28px,4vw,48px); align-items:flex-start}
+.hero-figs .fig{flex:1 1 0; aspect-ratio:4/3; min-width:0}
+.hero-figs .fig img{object-fit:cover}
 
 .p-body{display:grid; gap:clamp(30px,4vw,48px); padding-bottom:clamp(40px,6vw,72px)}
 .p-sec{display:grid; grid-template-columns:13rem minmax(0,1fr); gap:12px 40px; border-top:1px solid var(--rule); padding-top:18px}
@@ -164,9 +168,9 @@ footer a{text-decoration:none}
 .rich{display:flow-root; max-width:72ch; min-width:0}
 .rich > *:first-child{margin-top:0}
 .rich p{margin:0 0 14px}
-.rich ul{margin:0 0 14px; padding-left:1.15em}
+.rich ul{margin:0 0 14px; padding-left:1.15em; overflow:hidden}
 .rich li{margin-bottom:6px}
-.rich h3{font-family:var(--f-display); font-stretch:85%; font-size:1.05rem; text-transform:uppercase; margin:22px 0 8px}
+.rich h3{clear:both; font-family:var(--f-display); font-stretch:85%; font-size:1.05rem; text-transform:uppercase; margin:22px 0 8px}
 .rich a{color:var(--layout)}
 .rich figure{margin:4px 0 18px}
 .rich figure .fig{aspect-ratio:auto}
@@ -174,6 +178,12 @@ footer a{text-decoration:none}
 .rich figure.right{float:right; width:min(46%,380px); margin-left:26px}
 .rich figure.left{float:left; width:min(46%,380px); margin-right:26px}
 .rich figure.full{clear:both; width:100%}
+.rich figure.gallery{clear:both; width:100%}
+.rich figure.video video{display:block; width:100%; height:auto; max-height:80vh; background:var(--paper-2)}
+.rich figure.video.right,.rich figure.video.left{width:min(40%,320px)}
+.rich .gal{display:grid; gap:14px; align-items:start}
+.rich .g2 .gal{grid-template-columns:repeat(2,minmax(0,1fr))}
+.rich .g3 .gal{grid-template-columns:repeat(3,minmax(0,1fr))}
 .rich figcaption{margin-top:6px; font-family:var(--f-mono); font-size:.7rem; letter-spacing:.04em; color:var(--ink-2)}
 
 .post-body{max-width:72ch; margin:0 auto 0 0; padding-bottom:clamp(40px,6vw,72px)}
@@ -190,6 +200,8 @@ footer a{text-decoration:none}
 /* ── Responsive ────────────────────────────────── */
 @media (max-width: 900px){
   .card{grid-column:span 3}
+  .card:not(.major), .card.major{width:100%; justify-self:stretch !important}
+  .card:not(.major) .fig{aspect-ratio:1.58}
   .blog-grid,.about-grid{grid-template-columns:minmax(0,1fr)}
   .p-sec{grid-template-columns:minmax(0,1fr)}
   .portrait{max-width:340px}
@@ -203,6 +215,7 @@ footer a{text-decoration:none}
   .brand span{display:none}
   .btn .lbl-long{display:none}
   .card.major .fig{aspect-ratio:1/1}
+  .card:not(.major) .fig{aspect-ratio:5/4}
   .card:not(.major) p{display:none}
   .card h3{font-size:.98rem}
   .card .meta .ctx{display:none}
@@ -210,9 +223,10 @@ footer a{text-decoration:none}
   .post a > .mono{grid-column:1 / -1}
   .post h3{font-size:1.12rem}
   .post p{display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden}
+  .rich .g3 .gal{grid-template-columns:repeat(2,minmax(0,1fr))}
   .rich figure.right,.rich figure.left{float:none; width:100%; margin-left:0; margin-right:0}
-  .hero-figs{grid-template-columns:minmax(0,1fr)}
-  .hero-figs .fig:first-child, .hero-figs .fig{grid-column:1 / -1; aspect-ratio:3/2}
+  .hero-figs{flex-direction:column}
+  .hero-figs .fig{flex:none !important; width:100%; max-width:100% !important}
   .pager{grid-template-columns:minmax(0,1fr)}
   .pager a:last-child{text-align:left}
 }

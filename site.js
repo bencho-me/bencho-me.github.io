@@ -20,9 +20,9 @@
   };
 
   /* ── helpers ── */
-  function fig(src, label, cls){
+  function fig(src, label, cls, eager){
     return src
-      ? `<div class="fig ${cls||''}"><img src="${esc(src)}" alt="${esc(label)}" loading="lazy"></div>`
+      ? `<div class="fig ${cls||''}"><img src="${esc(src)}" alt="${esc(label)}"${eager ? '' : ' loading="lazy"'}></div>`
       : `<div class="fig empty ${cls||''}"><span class="tag mono">${esc(label)}</span></div>`;
   }
   const fmtDate = d => {
@@ -43,11 +43,26 @@
     String(text || '').split('\n').forEach(raw => {
       const line = raw.trim();
       const img = line.match(/^\[image:\s*([^|\]]+?)\s*(?:\|\s*(left|right|full)\s*)?(?:\|\s*([^\]]*?)\s*)?\]$/i);
+      const gal = line.match(/^\[gallery:\s*([^|\]]+?)\s*(?:\|\s*([^\]]*?)\s*)?\]$/i);
+      if (gal){
+        flush();
+        const srcs = gal[1].split(',').map(x => x.trim()).filter(Boolean);
+        out.push(`<figure class="gallery g${Math.min(srcs.length,3)}"><div class="gal">${srcs.map((x,n) => fig(x, (gal[2]||'Figure') + ' ' + (n+1), '', true)).join('')}</div>${gal[2] ? `<figcaption>${inline(gal[2])}</figcaption>` : ''}</figure>`);
+        return;
+      }
+      const vid = line.match(/^\[video:\s*([^|\]]+?)\s*(?:\|\s*(left|right|full)\s*)?(?:\|\s*([^\]]*?)\s*)?\]$/i);
+      if (vid){
+        flush();
+        const src = vid[1].trim(), side = (vid[2] || 'right').toLowerCase();
+        const poster = src.replace(/\.(mp4|mov|webm)$/i, '.jpg');
+        out.push(`<figure class="${side} video"><div class="fig"><video src="${esc(src)}" poster="${esc(poster)}" controls playsinline preload="metadata"></video></div>${vid[3] ? `<figcaption>${inline(vid[3])}</figcaption>` : ''}</figure>`);
+        return;
+      }
       if (!line){ flush(); }
       else if (img){
         flush();
         const side = (img[2] || 'right').toLowerCase();
-        out.push(`<figure class="${side}">${fig(img[1].trim(), img[3] || 'Figure')}${img[3] ? `<figcaption>${inline(img[3])}</figcaption>` : ''}</figure>`);
+        out.push(`<figure class="${side}">${fig(img[1].trim(), img[3] || 'Figure', '', true)}${img[3] ? `<figcaption>${inline(img[3])}</figcaption>` : ''}</figure>`);
       }
       else if (line.startsWith('## ')){ flush(); out.push(`<h3>${inline(line.slice(3))}</h3>`); }
       else if (/^[-•]\s+/.test(line)){ flushPara(); list.push(line.replace(/^[-•]\s+/, '')); }
@@ -113,7 +128,7 @@
     const rest = PROJECTS.filter(p => !majors.includes(p));
     const card = (p, major) => `
       <a class="card ${major ? 'major' : ''}" href="${projUrl(p)}">
-        ${fig(p.cover, KIND[p.type] || 'Project')}
+        ${fig(p.card || p.cover, KIND[p.type] || 'Project')}
         <div class="meta"><span class="mono">${esc(KIND[p.type] || '')}<span class="ctx"> · ${esc(p.context)}</span></span><span class="mono">${esc((p.date||'').match(/\d{4}/g)?.pop() || '')}</span></div>
         <h3>${esc(p.title)}${p.status ? `<span class="status">${esc(p.status)}</span>` : ''}</h3>
         <p>${esc(p.summary)}</p>
@@ -179,7 +194,7 @@
         ${specs.length ? `<dl class="specs">${specs.map(s => `<div><dt>${esc(s[0])}</dt><dd>${esc(s[1])}</dd></div>`).join('')}</dl>` : ''}
       </div>
       <div class="wrap">
-        <div class="hero-figs ${heroImgs.length === 2 ? 'two' : ''}">${heroImgs.map((s, n) => fig(s, n === 0 && !s ? 'Main photo · add image' : `${p.title} photo ${n+1}`)).join('')}</div>
+        <div class="hero-figs" id="heroFigs">${heroImgs.map((s, n) => fig(s, n === 0 && !s ? 'Main photo · add image' : `${p.title} photo ${n+1}`)).join('')}</div>
         <div class="p-body">
           ${secs.map(([k, label], n) => `
             <section class="p-sec">
@@ -192,6 +207,16 @@
           <a href="${projUrl(next)}"><span class="mono">Next →</span><b>${esc(next.title)}</b></a>
         </nav>` : ''}
       </div>`;
+    /* size each top photo to its real shape so a row has equal heights and no empty bands */
+    document.querySelectorAll('#heroFigs .fig img').forEach(img => {
+      const apply = () => {
+        const r = img.naturalWidth / img.naturalHeight; if (!r) return;
+        const f = img.parentElement;
+        f.style.aspectRatio = r; f.style.flexGrow = r;
+        if (heroImgs.length === 1) f.style.maxWidth = `calc(72vh * ${r})`;
+      };
+      img.complete ? apply() : img.addEventListener('load', apply);
+    });
   }
 
   /* ── BLOG POST PAGE ── */
