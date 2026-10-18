@@ -1,0 +1,218 @@
+/* Shared styles for every page. You don't need to edit this file. */
+
+/* Layout concept: an engineering drawing sheet — ruled lines, drawing-style labels,
+   one machinist's layout-blue accent, and grids whose edges all line up. */
+:root{
+  --paper:#F1F2EF;
+  --paper-2:#E6E8E4;
+  --ink:#16191D;
+  --ink-2:#555C64;
+  --rule:#C5CAC7;
+  --layout:#2443A8;
+  --layout-soft:rgba(36,67,168,.09);
+
+  --f-display:"Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --s-1:.75rem; --s-2:.9rem; --s-3:1.0625rem; --s-4:1.3rem;
+  --max:1180px;
+  --gap:clamp(14px,2.2vw,28px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111417; --paper-2:#191D21; --ink:#E5E7E4; --ink-2:#9CA3A9; --rule:#2D3339;
+    --layout:#8AA0F2; --layout-soft:rgba(138,160,242,.12); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111417; --paper-2:#191D21; --ink:#E5E7E4; --ink-2:#9CA3A9; --rule:#2D3339;
+  --layout:#8AA0F2; --layout-soft:rgba(138,160,242,.12); color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:90px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important} }
+body{margin:0; background:var(--paper); color:var(--ink); font-family:var(--f-body); font-size:var(--s-3); line-height:1.6; -webkit-font-smoothing:antialiased}
+img{max-width:100%; display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--layout); outline-offset:3px}
+[hidden]{display:none!important}
+
+.wrap{max-width:var(--max); margin:0 auto; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.mono{font-family:var(--f-mono); font-size:var(--s-1); letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2)}
+
+/* ── Header (same on every page) ───────────────── */
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:30; background:var(--paper)}
+.top{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:var(--paper); border-bottom:1px solid var(--rule)}
+.top .wrap{display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:12px 28px; padding-block:12px}
+.brand{font-family:var(--f-display); font-stretch:82%; font-weight:700; font-size:1.05rem; letter-spacing:.02em; text-decoration:none; text-transform:uppercase; white-space:nowrap}
+.brand span{font-weight:400; color:var(--ink-2)}
+.top nav ul{list-style:none; margin:0; padding:0; display:flex; gap:clamp(14px,3vw,30px)}
+.top nav a{font-family:var(--f-mono); font-size:var(--s-1); letter-spacing:.12em; text-transform:uppercase; text-decoration:none; color:var(--ink-2); padding-block:6px; border-bottom:1px solid transparent}
+.top nav a:hover, .top nav a.on{color:var(--ink); border-bottom-color:var(--layout)}
+.connect{display:flex; gap:8px; position:relative}
+
+.btn{display:inline-flex; align-items:center; gap:8px; font-family:var(--f-mono); font-size:var(--s-1); letter-spacing:.1em; text-transform:uppercase; text-decoration:none; padding:9px 13px; border:1px solid var(--ink); background:transparent; color:var(--ink); cursor:pointer; line-height:1.2}
+.btn.solid{background:var(--ink); color:var(--paper)}
+.btn:hover{border-color:var(--layout); color:var(--layout)}
+.btn.solid:hover{background:var(--layout); color:var(--paper); border-color:var(--layout)}
+.btn.off{opacity:.4; cursor:not-allowed}
+.btn svg{width:14px; height:14px; flex:none}
+.btn.sm{padding:7px 10px}
+
+.mailpop{position:absolute; right:0; top:calc(100% + 10px); width:min(330px, calc(100vw - 32px)); background:var(--paper); border:1.5px solid var(--ink); padding:14px; display:grid; gap:10px; z-index:40; box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.mailpop .addr{font-family:var(--f-mono); font-size:.9rem; user-select:all; word-break:break-all; color:var(--ink)}
+.mailpop .row{display:flex; flex-wrap:wrap; gap:8px}
+
+/* ── Image wells ───────────────────────────────── */
+.fig{position:relative; background:var(--paper-2); aspect-ratio:3/2; max-width:100%; overflow:hidden; border:1px solid var(--rule); margin:0}
+.fig img{width:100%; height:100%; object-fit:cover}
+.fig.empty{background-image:linear-gradient(var(--rule) 1px, transparent 1px), linear-gradient(90deg, var(--rule) 1px, transparent 1px); background-size:22px 22px; background-position:-1px -1px}
+.fig.empty::before,.fig.empty::after{content:""; position:absolute; background:var(--layout); opacity:.55}
+.fig.empty::before{left:50%; top:calc(50% - 18px); width:1px; height:36px}
+.fig.empty::after{top:50%; left:calc(50% - 18px); height:1px; width:36px}
+.fig .tag{position:absolute; left:8px; bottom:8px; background:var(--paper); padding:3px 7px; border:1px solid var(--rule); font-size:.65rem}
+
+/* ── Home: compact intro ───────────────────────── */
+.intro{padding-block:clamp(18px,2.6vw,30px) clamp(16px,2.2vw,24px)}
+.intro .wrap{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:16px 40px; align-items:end}
+.intro h1{font-family:var(--f-display); font-stretch:70%; font-weight:780; font-size:clamp(1.6rem,3.2vw,2.5rem); line-height:.98; margin:6px 0 10px; text-transform:uppercase; text-wrap:balance}
+.intro h1 em{font-style:normal; color:var(--layout)}
+.intro p{margin:0; max-width:70ch; color:var(--ink-2); font-size:.98rem; line-height:1.5}
+.intro .actions{display:flex; flex-wrap:wrap; gap:8px}
+
+/* ── Section heads ─────────────────────────────── */
+section.block{padding-block:clamp(20px,2.6vw,32px) clamp(48px,7vw,84px); border-top:1px solid var(--rule)}
+.shead{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:6px 16px; margin-bottom:clamp(16px,2.4vw,26px)}
+.shead h2{font-family:var(--f-display); font-stretch:72%; font-weight:760; font-size:clamp(1.5rem,3vw,2.2rem); line-height:1; margin:0; text-transform:uppercase}
+.shead h2 .mono{font-stretch:100%; margin-right:12px; vertical-align:middle}
+
+/* ── Portfolio grid: 2 major on top, 3 per row below ── */
+.projects{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:clamp(30px,4vw,48px) var(--gap); align-items:start}
+.card{grid-column:span 2; display:flex; flex-direction:column; gap:10px; text-decoration:none; color:inherit; min-width:0}
+.card.major{grid-column:span 3}
+.card.major .fig{aspect-ratio:2/1}
+.card .meta{display:flex; justify-content:space-between; gap:10px}
+.card .meta span{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.card h3{font-family:var(--f-display); font-stretch:80%; font-weight:700; font-size:1.15rem; line-height:1.12; margin:0; text-transform:uppercase; text-wrap:balance}
+.card.major h3{font-size:clamp(1.15rem,2.1vw,1.6rem)}
+.card p{margin:0; color:var(--ink-2); font-size:var(--s-2); max-width:60ch}
+.card .fig{transition:border-color .2s}
+.card:hover .fig{border-color:var(--layout)}
+.card:hover h3{color:var(--layout)}
+.divider{grid-column:1 / -1; height:0; border-top:1px dashed var(--rule); margin:-6px 0}
+.status{display:inline-block; margin-left:8px; font-family:var(--f-mono); font-size:.62rem; letter-spacing:.08em; vertical-align:middle; padding:2px 6px; border:1px solid var(--layout); color:var(--layout); text-transform:uppercase; font-weight:500; font-stretch:100%}
+
+/* ── Blog list ─────────────────────────────────── */
+.blog-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2.6fr); gap:clamp(20px,5vw,60px)}
+.blog-aside p{margin:0; color:var(--ink-2); font-size:var(--s-2); max-width:34ch}
+.posts{list-style:none; margin:0; padding:0}
+.post{border-top:1px solid var(--rule)}
+.post:last-child{border-bottom:1px solid var(--rule)}
+.post a{display:grid; grid-template-columns:7.5em minmax(0,1fr) clamp(110px,18vw,190px); gap:20px; padding:20px 4px; text-decoration:none; align-items:start}
+.post h3{font-family:var(--f-body); font-weight:600; font-size:1.35rem; line-height:1.25; margin:0 0 6px; text-wrap:balance}
+.post p{margin:0; color:var(--ink-2); font-size:var(--s-2); max-width:58ch}
+.post .fig{aspect-ratio:4/3}
+.post a:hover h3{color:var(--layout)}
+.post a:hover .fig{border-color:var(--layout)}
+.draft{display:inline-block; font-family:var(--f-mono); font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:var(--paper); background:var(--ink-2); padding:2px 6px; margin-left:8px; vertical-align:middle; font-weight:500}
+
+/* ── About ─────────────────────────────────────── */
+.about-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.5fr); gap:clamp(28px,5vw,72px)}
+.portrait{aspect-ratio:4/5}
+.about-copy p{margin:0 0 16px; max-width:62ch}
+.timeline{list-style:none; margin:28px 0 0; padding:0; border-left:1.5px solid var(--ink)}
+.timeline li{position:relative; padding:0 0 22px 22px}
+.timeline li::before{content:""; position:absolute; left:-5px; top:.55em; width:8px; height:8px; background:var(--paper); border:1.5px solid var(--layout)}
+.timeline b{display:block; font-family:var(--f-display); font-stretch:85%; font-weight:650; text-transform:uppercase; font-size:1.02rem}
+.timeline span{font-size:var(--s-2); color:var(--ink-2)}
+.facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr)); gap:28px; margin-top:44px; padding-top:28px; border-top:1px solid var(--rule)}
+.facts h4{margin:0 0 10px; font-family:var(--f-mono); font-size:var(--s-1); font-weight:500; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2)}
+.facts ul{list-style:none; margin:0; padding:0; font-size:var(--s-2); display:grid; gap:4px}
+.contact{margin-top:44px; display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+.email{font-family:var(--f-mono); font-size:.95rem; border-bottom:1px solid var(--layout); text-decoration:none; user-select:all; word-break:break-all}
+
+footer{border-top:1.5px solid var(--ink); padding-block:22px 36px}
+footer .wrap{display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px}
+footer a{text-decoration:none}
+
+/* ── Project & blog pages ──────────────────────── */
+.page-head{padding-block:clamp(22px,4vw,44px) clamp(18px,3vw,28px)}
+.back{display:inline-block; margin-bottom:18px; text-decoration:none}
+.back:hover{color:var(--layout)}
+.page-head h1{font-family:var(--f-display); font-stretch:70%; font-weight:780; font-size:clamp(2.1rem,5.4vw,4rem); line-height:.95; margin:10px 0 18px; text-transform:uppercase; text-wrap:balance; max-width:22ch}
+.page-head h1.serif{font-family:var(--f-body); font-stretch:100%; font-weight:600; text-transform:none; line-height:1.12; max-width:26ch}
+.page-head .lede{margin:0; max-width:62ch; font-size:1.15rem}
+.kind{display:inline-block; font-family:var(--f-mono); font-size:var(--s-1); letter-spacing:.1em; text-transform:uppercase; padding:4px 9px; border:1px solid var(--layout); color:var(--layout)}
+.specs{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(45%,190px),1fr)); column-gap:16px; border-top:1.5px solid var(--ink); border-bottom:1px solid var(--rule); margin:24px 0 0}
+.specs div{padding:12px 14px 12px 0; min-width:0}
+.specs dt{font-family:var(--f-mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2)}
+.specs dd{margin:3px 0 0; font-size:var(--s-2)}
+
+.hero-figs{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--gap); margin-bottom:clamp(28px,4vw,48px)}
+.hero-figs .fig{grid-column:span 1; aspect-ratio:3/2}
+.hero-figs .fig:first-child{grid-column:1 / -1; aspect-ratio:16/8}
+.hero-figs.two .fig:first-child{grid-column:span 1; aspect-ratio:3/2}
+
+.p-body{display:grid; gap:clamp(30px,4vw,48px); padding-bottom:clamp(40px,6vw,72px)}
+.p-sec{display:grid; grid-template-columns:13rem minmax(0,1fr); gap:12px 40px; border-top:1px solid var(--rule); padding-top:18px}
+.p-sec h2{margin:0; font-family:var(--f-display); font-stretch:80%; font-weight:700; font-size:1.25rem; text-transform:uppercase; line-height:1.15}
+.p-sec h2 .mono{display:block; margin-bottom:6px; font-stretch:100%; font-weight:400}
+
+.rich{display:flow-root; max-width:72ch; min-width:0}
+.rich > *:first-child{margin-top:0}
+.rich p{margin:0 0 14px}
+.rich ul{margin:0 0 14px; padding-left:1.15em}
+.rich li{margin-bottom:6px}
+.rich h3{font-family:var(--f-display); font-stretch:85%; font-size:1.05rem; text-transform:uppercase; margin:22px 0 8px}
+.rich a{color:var(--layout)}
+.rich figure{margin:4px 0 18px}
+.rich figure .fig{aspect-ratio:auto}
+.rich figure .fig img{height:auto}
+.rich figure.right{float:right; width:min(46%,380px); margin-left:26px}
+.rich figure.left{float:left; width:min(46%,380px); margin-right:26px}
+.rich figure.full{clear:both; width:100%}
+.rich figcaption{margin-top:6px; font-family:var(--f-mono); font-size:.7rem; letter-spacing:.04em; color:var(--ink-2)}
+
+.post-body{max-width:72ch; margin:0 auto 0 0; padding-bottom:clamp(40px,6vw,72px)}
+.post-body .rich{font-size:1.1rem}
+.post-cover{margin-bottom:clamp(24px,4vw,40px)}
+.post-cover .fig{aspect-ratio:16/8}
+
+.pager{display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); border-top:1.5px solid var(--ink); padding-block:20px 48px}
+.pager a{text-decoration:none; display:grid; gap:4px}
+.pager a:last-child{text-align:right}
+.pager b{font-family:var(--f-display); font-stretch:82%; text-transform:uppercase; font-size:1.05rem}
+.pager a:hover b{color:var(--layout)}
+
+/* ── Responsive ────────────────────────────────── */
+@media (max-width: 900px){
+  .card{grid-column:span 3}
+  .blog-grid,.about-grid{grid-template-columns:minmax(0,1fr)}
+  .p-sec{grid-template-columns:minmax(0,1fr)}
+  .portrait{max-width:340px}
+}
+@media (max-width: 720px){
+  .top .wrap{grid-template-columns:1fr auto}
+  .top nav{grid-column:1 / -1; grid-row:2}
+  .intro .wrap{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width: 560px){
+  .brand span{display:none}
+  .btn .lbl-long{display:none}
+  .card.major .fig{aspect-ratio:1/1}
+  .card:not(.major) p{display:none}
+  .card h3{font-size:.98rem}
+  .card .meta .ctx{display:none}
+  .post a{grid-template-columns:minmax(0,1fr) 96px; gap:6px 14px}
+  .post a > .mono{grid-column:1 / -1}
+  .post h3{font-size:1.12rem}
+  .post p{display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden}
+  .rich figure.right,.rich figure.left{float:none; width:100%; margin-left:0; margin-right:0}
+  .hero-figs{grid-template-columns:minmax(0,1fr)}
+  .hero-figs .fig:first-child, .hero-figs .fig{grid-column:1 / -1; aspect-ratio:3/2}
+  .pager{grid-template-columns:minmax(0,1fr)}
+  .pager a:last-child{text-align:left}
+}
