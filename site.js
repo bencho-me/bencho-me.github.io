@@ -120,15 +120,48 @@
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') pop.hidden = true; });
 
+
+  /* ── project order (same everywhere): 2 majors, then newest end date first ── */
+  const majors = PROJECTS.filter(p => p.major).slice(0, 2);
+  /* non-major projects: newest end date first; no end date / upcoming = newest */
+  const MON = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+  const endOf = p => {
+    if (/upcoming|in progress/i.test(p.status || '')) return Infinity;
+    const parts = String(p.date || '').split(/[–-]/);
+    const end = (parts.length > 1 ? parts[parts.length - 1] : parts[0]).trim();
+    if (!end || /present|now/i.test(end)) return Infinity;
+    const y = end.match(/\d{4}/); if (!y) return -Infinity;
+    const m = end.toLowerCase().match(/[a-z]{3}/);
+    return +y[0] * 12 + (m && m[0] in MON ? MON[m[0]] : 11);
+  };
+  const rest = PROJECTS.filter(p => !majors.includes(p)).sort((a, b) => endOf(b) - endOf(a));
+  const ORDERED = [...majors, ...rest];
+  const SORTED_POSTS = [...POSTS].sort((a,b) => (b.date||'').localeCompare(a.date||''));
+
+  /* "You may also like": two before and one after in display order (wraps around) */
+  function alsoLike(list, i, url, imgOf, kindOf){
+    const n = list.length; if (n < 2) return '';
+    const picks = [];
+    for (const d of [-2, -1, 1]){ const q = list[((i + d) % n + n) % n]; if (q !== list[i] && !picks.includes(q)) picks.push(q); }
+    return `<section class="also" aria-labelledby="alsoTitle">
+      <h2 id="alsoTitle">You May Also Like</h2>
+      <div class="also-grid">${picks.map(q => `
+        <a class="also-card" href="${url(q)}">
+          ${fig(imgOf(q), 'Image')}
+          <span class="mono">${esc(kindOf(q))}</span>
+          <b>${esc(q.title)}</b>
+        </a>`).join('')}</div>
+    </section>`;
+  }
+
   /* ── HOME ── */
   if (page === 'home'){
-    $('#introActions').innerHTML = `${linkedinBtn('solid')}${emailBtn()}${SITE.resume ? `<a class="btn" href="${esc(SITE.resume)}" target="_blank" rel="noopener">${ICON.doc}<span>Résumé</span></a>` : ''}`;
+    $('#introActions').innerHTML = `${linkedinBtn()}${emailBtn()}${SITE.resume ? `<a class="btn" href="${esc(SITE.resume)}" target="_blank" rel="noopener">${ICON.doc}<span>Résumé</span></a>` : ''}`;
 
-    const majors = PROJECTS.filter(p => p.major).slice(0, 2);
-    const rest = PROJECTS.filter(p => !majors.includes(p));
     const card = (p, major) => `
       <a class="card ${major ? 'major' : ''}" href="${projUrl(p)}">
-        ${fig(p.card || p.cover, KIND[p.type] || 'Project')}
+        ${(() => { const f = fig(p.card || p.cover, KIND[p.type] || 'Project'); const h = p.highlight;
+            return h && h[0] ? f.replace(/<\/div>$/, `<span class="hl"><b>${esc(h[0])}</b>${h[1] ? `<span>${esc(h[1])}</span>` : ''}</span></div>`) : f; })()}
         <div class="meta"><span class="mono">${esc(KIND[p.type] || '')}<span class="ctx"> · ${esc(p.context)}</span></span><span class="mono">${esc((p.date||'').match(/\d{4}/g)?.pop() || '')}</span></div>
         <h3>${esc(p.title)}${p.status ? `<span class="status">${esc(p.status)}</span>` : ''}</h3>
         <p>${esc(p.summary)}</p>
@@ -182,8 +215,6 @@
     const imgs = [p.cover, ...(p.topImages||[])].filter(Boolean);
     const heroImgs = imgs.length ? imgs : [''];
     const secs = (LAYOUT[p.type] || LAYOUT.team).filter(([k]) => String(p[k]||'').trim());
-    const prev = PROJECTS[(i - 1 + PROJECTS.length) % PROJECTS.length];
-    const next = PROJECTS[(i + 1) % PROJECTS.length];
 
     main.innerHTML = `
       <div class="wrap page-head">
@@ -202,10 +233,7 @@
               <div class="rich">${rich(p[k])}</div>
             </section>`).join('')}
         </div>
-        ${PROJECTS.length > 1 ? `<nav class="pager" aria-label="More projects">
-          <a href="${projUrl(prev)}"><span class="mono">← Previous</span><b>${esc(prev.title)}</b></a>
-          <a href="${projUrl(next)}"><span class="mono">Next →</span><b>${esc(next.title)}</b></a>
-        </nav>` : ''}
+        ${alsoLike(ORDERED, ORDERED.indexOf(p), projUrl, q => q.card || q.cover, q => KIND[q.type] || 'Project')}
       </div>`;
     /* size each top photo to its real shape so a row has equal heights and no empty bands */
     document.querySelectorAll('#heroFigs .fig img').forEach(img => {
@@ -222,7 +250,7 @@
   /* ── BLOG POST PAGE ── */
   if (page === 'post'){
     const id = new URLSearchParams(location.search).get('id');
-    const sorted = [...POSTS].sort((a,b) => (b.date||'').localeCompare(a.date||''));
+    const sorted = SORTED_POSTS;
     const i = sorted.findIndex(p => p.id === id);
     const main = $('#main');
     if (i < 0){
@@ -231,7 +259,6 @@
     }
     const p = sorted[i];
     document.title = `${p.title} · Ben Cho`;
-    const newer = sorted[i - 1], older = sorted[i + 1];
     main.innerHTML = `
       <div class="wrap page-head">
         <a class="back mono" href="./#blog">← All posts</a>
@@ -242,10 +269,7 @@
       <div class="wrap">
         ${p.cover ? `<div class="post-cover">${fig(p.cover, p.title)}</div>` : ''}
         <article class="post-body"><div class="rich">${rich(p.body)}</div></article>
-        ${(newer || older) ? `<nav class="pager" aria-label="More posts">
-          ${older ? `<a href="${postUrl(older)}"><span class="mono">← Older</span><b>${esc(older.title)}</b></a>` : '<span></span>'}
-          ${newer ? `<a href="${postUrl(newer)}"><span class="mono">Newer →</span><b>${esc(newer.title)}</b></a>` : '<span></span>'}
-        </nav>` : ''}
+        ${alsoLike(sorted, i, postUrl, q => q.cover, q => `${fmtDate(q.date)} · ${q.tag || 'Blog'}`)}
       </div>`;
   }
 })();

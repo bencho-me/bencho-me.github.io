@@ -30,7 +30,7 @@ const SITE = {
   email: `mscho40905@gmail.com`,
   linkedin: `https://www.linkedin.com/in/bencho0905`,
   resume: `resume.pdf`,          // the résumé PDF in the main folder
-  portrait: ``,                  // e.g. images/ben.jpg
+  portrait: `images/ben-portrait.jpg`,
 };
 
 
@@ -45,6 +45,14 @@ const SITE = {
      `research` → My role · Objective · Overview of my contribution · Results
                   (plus Lab / institution and Timeline at the top)
    You can leave fields you don't need for that type empty, or delete them.
+
+   ORDER: the two major projects show first. All other projects are sorted
+   automatically by their end date (the part of  date  after the dash),
+   newest first. A project with no end date yet (e.g. `2026 –`) or with
+   status `Upcoming` / `In progress` counts as the newest.
+
+   highlight (optional) puts a key result on the homepage card's photo,
+   e.g.  highlight: [`−35%`, `recast height`],   Leave it out if there is none.
 
    cover is the main photo, used on the homepage card and at the top of the page.
    To show a different photo on the homepage card only, add:  card: `images/x.jpg`,
@@ -63,6 +71,7 @@ const PROJECTS = [
     context: `JHU Mars Rover Team (Hopkinauts)`,
     date: `Mar – Aug 2025`,
     status: ``,
+    highlight: [`5 kg`, `payload`],      // optional key number shown on the homepage card
     cover: `images/gripper-built-wide.jpg`,
     topImages: [`images/gripper-built-top.jpg`],
     summary: `A lead-screw parallel gripper for the rover arm, sized for 98 N of grip force to carry 5 kg objects and handle servicing tasks like typing and flipping switches.`,
@@ -127,10 +136,11 @@ The required motor torque is T = F × (L / 1000) / (2πe), where L is the screw 
     id: `laser-flyer-optimization`,
     type: `research`,
     major: true,
-    title: `HEMI Laser Flyer Research`,
+    title: `Laser-Cut Flyer Optimization`,
     context: `Hopkins Extreme Materials Institute`,
     date: `May – Aug 2025`,
     status: ``,
+    highlight: [`−35%`, `recast height`],
     cover: `images/hemi-profile-scan.jpg`,
     topImages: [`images/hemi-sample-array.jpg`],   // main photo row: 3D scan of the recast rim + mounted samples
     summary: `A Gaussian Process Regression model that optimized laser cutting of titanium flyers for high-impact experiments, cutting recast height by 35%.`,
@@ -223,7 +233,7 @@ In the side view, the blue thread runs to the pulley that pulls the glider back,
     context: `Independent build`,
     date: `2026 –`,
     status: `Upcoming`,
-    cover: ``,
+    cover: `images/robot-arm-kinematic-sketch.jpg`,
     topImages: [],
     summary: `A self-designed robot arm with cycloidal reducers and closed-loop joint control.`,
     tools: [`Onshape`, `3D printing`, `Cycloidal drive`, `Encoders`],
@@ -233,7 +243,7 @@ In the side view, the blue thread runs to the pulley that pulls the glider back,
 - Payload of at least 1 kg
 - Cycloidal reducers on BLDC or stepper motors
 - Encoder feedback for closed-loop control`,
-    overview: `Currently designing the arm in Onshape.`,
+    overview: `Currently designing the arm in Onshape. The kinematic sketch at the top shows the planned layout: six revolute joints (J1–J6), the links between them, and the joint angles θ1–θ6.`,
     results: `In progress.`,
   },
 
@@ -301,28 +311,6 @@ The finished cabinet has a joystick to aim left and right and set power, a large
   },
 
   {
-    id: `gpr-dislocation-plasticity`,
-    type: `research`,
-    major: false,
-    title: `GPR Model for Dislocation Plasticity`,
-    context: `ICE-4-iMD Lab, JHU`,
-    date: `Jan – May 2025`,
-    status: ``,
-    cover: ``,
-    topImages: [],
-    summary: `A Python Gaussian Process Regression model that predicts material strength from size-dependent plasticity data.`,
-    tools: [`Python`, `Gaussian Process Regression`],
-
-    lab: `ICE-4-iMD Lab, Johns Hopkins University`,
-    timeline: `Jan – May 2025`,
-    role: `Research Assistant.`,
-    objective: `Predict material strength for research on size-dependent dislocation plasticity.`,
-    overview: `- Developed a GPR model in Python and optimized kernel selection to model dislocation behavior in metals.
-- Reviewed experimental datasets from the literature.`,
-    results: ``,
-  },
-
-  {
     id: `posture-detection`,
     type: `personal`,
     major: false,
@@ -330,6 +318,7 @@ The finished cabinet has a joystick to aim left and right and set power, a large
     context: `Mercersburg Academy · Research Science Capstone`,
     date: `May 2023 – May 2024`,
     status: ``,
+    highlight: [`40+`, `students studied`],
     card: `images/situp-card.jpg`,           // optional: a different photo for the homepage card only
     cover: `images/situp-detection.jpg`,
     topImages: [`images/situp-dashboard.jpg`],
@@ -395,7 +384,7 @@ const POSTS = [
     title: `Why a self-locking lead screw for a rover gripper`,
     date: `2025-09-02`,
     tag: `Design notes`,
-    cover: ``,
+    cover: `images/blog-leadscrew-vs-rail.jpg`,
     draft: true,
     excerpt: `A gripper that holds its grip with the motor off, and the trade-off you accept to get it.`,
     body: `STARTER DRAFT. Rewrite this in your own words, then set draft: false.
@@ -416,7 +405,7 @@ The same friction that locks the screw lowers its efficiency, so the motor works
     title: `Starting a robot arm build`,
     date: `2026-10-01`,
     tag: `Build log`,
-    cover: ``,
+    cover: `images/blog-cycloidal-exploded.jpg`,
     draft: true,
     excerpt: `Why I'm designing my own arm around cycloidal reducers and closed-loop control.`,
     body: `STARTER DRAFT. Rewrite this in your own words, then set draft: false.
