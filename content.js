@@ -51,9 +51,6 @@ const SITE = {
    newest first. A project with no end date yet (e.g. `2026 –`) or with
    status `Upcoming` / `In progress` counts as the newest.
 
-   highlight (optional) puts a key result on the homepage card's photo,
-   e.g.  highlight: [`−35%`, `recast height`],   Leave it out if there is none.
-
    cover is the main photo, used on the homepage card and at the top of the page.
    To show a different photo on the homepage card only, add:  card: `images/x.jpg`,
 
@@ -71,7 +68,6 @@ const PROJECTS = [
     context: `JHU Mars Rover Team (Hopkinauts)`,
     date: `Mar – Aug 2025`,
     status: ``,
-    highlight: [`5 kg`, `payload`],      // optional key number shown on the homepage card
     cover: `images/gripper-built-wide.jpg`,
     topImages: [`images/gripper-built-top.jpg`],
     summary: `A lead-screw parallel gripper for the rover arm, sized for 98 N of grip force to carry 5 kg objects and handle servicing tasks like typing and flipping switches.`,
@@ -140,7 +136,6 @@ The required motor torque is T = F × (L / 1000) / (2πe), where L is the screw 
     context: `Hopkins Extreme Materials Institute`,
     date: `May – Aug 2025`,
     status: ``,
-    highlight: [`−35%`, `recast height`],
     cover: `images/hemi-profile-scan.jpg`,
     topImages: [`images/hemi-sample-array.jpg`],   // main photo row: 3D scan of the recast rim + mounted samples
     summary: `A Gaussian Process Regression model that optimized laser cutting of titanium flyers for high-impact experiments, cutting recast height by 35%.`,
@@ -318,7 +313,6 @@ The finished cabinet has a joystick to aim left and right and set power, a large
     context: `Mercersburg Academy · Research Science Capstone`,
     date: `May 2023 – May 2024`,
     status: ``,
-    highlight: [`40+`, `students studied`],
     card: `images/situp-card.jpg`,           // optional: a different photo for the homepage card only
     cover: `images/situp-detection.jpg`,
     topImages: [`images/situp-dashboard.jpg`],

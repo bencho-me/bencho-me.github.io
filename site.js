@@ -74,9 +74,9 @@
   const projUrl = p => `project.html?id=${encodeURIComponent(p.id)}`;
   const postUrl = p => `post.html?id=${encodeURIComponent(p.id)}`;
   const linkedinBtn = (cls) => SITE.linkedin
-    ? `<a class="btn ${cls||''}" href="${esc(SITE.linkedin)}" target="_blank" rel="noopener">${ICON.in}<span>LinkedIn</span></a>`
-    : `<span class="btn off ${cls||''}" title="Add your LinkedIn URL in content.js">${ICON.in}<span>LinkedIn</span></span>`;
-  const emailBtn = (cls) => `<button class="btn ${cls||''}" type="button" data-mail aria-haspopup="true">${ICON.mail}<span>Email</span></button>`;
+    ? `<a class="btn btn-li ${cls||''}" href="${esc(SITE.linkedin)}" target="_blank" rel="noopener">${ICON.in}<span>LinkedIn</span></a>`
+    : `<span class="btn btn-li off ${cls||''}" title="Add your LinkedIn URL in content.js">${ICON.in}<span>LinkedIn</span></span>`;
+  const emailBtn = (cls) => `<button class="btn btn-mail ${cls||''}" type="button" data-mail aria-haspopup="true">${ICON.mail}<span>Email</span></button>`;
 
   /* ── header & footer (shared) ── */
   $('#siteHeader').innerHTML = `
@@ -156,12 +156,11 @@
 
   /* ── HOME ── */
   if (page === 'home'){
-    $('#introActions').innerHTML = `${linkedinBtn()}${emailBtn()}${SITE.resume ? `<a class="btn" href="${esc(SITE.resume)}" target="_blank" rel="noopener">${ICON.doc}<span>Résumé</span></a>` : ''}`;
+    $('#introActions').innerHTML = `${linkedinBtn()}${emailBtn()}${SITE.resume ? `<a class="btn btn-cv" href="${esc(SITE.resume)}" target="_blank" rel="noopener">${ICON.doc}<span>Résumé</span></a>` : ''}`;
 
     const card = (p, major) => `
       <a class="card ${major ? 'major' : ''}" href="${projUrl(p)}">
-        ${(() => { const f = fig(p.card || p.cover, KIND[p.type] || 'Project'); const h = p.highlight;
-            return h && h[0] ? f.replace(/<\/div>$/, `<span class="hl"><b>${esc(h[0])}</b>${h[1] ? `<span>${esc(h[1])}</span>` : ''}</span></div>`) : f; })()}
+        ${fig(p.card || p.cover, KIND[p.type] || 'Project')}
         <div class="meta"><span class="mono">${esc(KIND[p.type] || '')}<span class="ctx"> · ${esc(p.context)}</span></span><span class="mono">${esc((p.date||'').match(/\d{4}/g)?.pop() || '')}</span></div>
         <h3>${esc(p.title)}${p.status ? `<span class="status">${esc(p.status)}</span>` : ''}</h3>
         <p>${esc(p.summary)}</p>
